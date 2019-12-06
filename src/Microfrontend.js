@@ -7,14 +7,19 @@ import React from "react";
 
 
 class Microfrontend extends React.Component {
-  // static defaultProps = {
-  //   document: document,
-  //   window: window
-  // };
+  static defaultProps = {
+    document: document,
+    window: window
+  };
+
+  shadow = null;
 
   scriptIds = [];
   componentDidMount() {
     const { name, host, document } = this.props;
+    let root = document.querySelector("micro-container");
+    if(root)
+      this.shadow = root.shadowRoot;
     // const scriptId = `micro-${name}-`;
 
     // if (document.getElementById(scriptId)) {
@@ -41,7 +46,7 @@ class Microfrontend extends React.Component {
             );
             if (scriptIdentifier.length) {
               let scriptId = `micro-${name}-${scriptIdentifier[0]}`;
-              if (document.getElementById(scriptId)) {
+              if (this.shadow.getElementById(scriptId)) {
                 allPresent++;
                 continue;
               }
@@ -57,7 +62,7 @@ class Microfrontend extends React.Component {
                   this.renderMicroFrontend();
                 }
               };
-              document.head.appendChild(script);
+              this.shadow.appendChild(script);
             }
           }
           if (/.css$/.test(entry)) {
@@ -65,7 +70,7 @@ class Microfrontend extends React.Component {
 
             if (cssIdentifier.length) {
               let scriptId = `micro-${name}-${cssIdentifier[0]}`;
-              if (document.getElementById(scriptId)) {
+              if (this.shadow.getElementById(scriptId)) {
                 allPresentCss++;
                 continue;
               }
@@ -75,7 +80,7 @@ class Microfrontend extends React.Component {
               link.rel = "stylesheet";
               link.type = "text/css";
               link.href = `${host}/${entry}`;
-              document.head.appendChild(link);
+              this.shadow.appendChild(link);
             }
           }
         }
@@ -87,14 +92,14 @@ class Microfrontend extends React.Component {
 
   renderMicroFrontend = () => {
     const { name, window, history } = this.props;
-    window[`render${name}`](`${name}-container`, history);
+    window[`render${name}`](this.shadow,`${name}-container`, history);
   };
 
   componentWillUnmount() {
     const { name } = this.props;
     window[`unmount${name}`](`${name}-container`);
     for (let i = 0; i < this.scriptIds.length; i++) {
-      let elem = document.getElementById(this.scriptIds[i]);
+      let elem = this.shadow.getElementById(this.scriptIds[i]);
       if (elem && elem.parentNode) {
         elem.parentNode.removeChild(elem);
       }

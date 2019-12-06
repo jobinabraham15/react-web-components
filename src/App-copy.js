@@ -4,11 +4,8 @@ import MicroContainer1 from "./micro-container11";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
 import { Homepage } from "./Homepage";
-import { Col } from "antd";
-if (!customElements.get("micro-container")) {
-  customElements.define("micro-container", MicroContainer1);
-}
-
+customElements.define("micro-container", MicroContainer1);
+let MicroF = props => React.createElement("micro-container", props);
 // let MicroF = props => null;
 
 let routes = [];
@@ -28,33 +25,46 @@ let getRoutes = async () => {
   try {
     result = await axios.get("http://127.0.0.1:3003/contracts.json");
     let data = result.data;
+    
+    
+    routes.push(
+      <Route
+        key={""}
+        path={`/${"staffing/main"}`}
+        render={props => {
+          return (
+            <MicroF
+              location={props.location}
+              history={props.history}
+              contract={{}}
+            />
+          );
+        }}
+      />
+    );
 
-    for (let contract in data) {
-      if (data.hasOwnProperty(contract)) {
-        let currentContract = data[contract];
-        let MicroF = props => {
-          return React.createElement("micro-container", props);
-        };
-        routes.push(
-          <Route
-            key={currentContract.name}
-            path={`/${currentContract.route}`}
-            render={props => {
-              window.microFrontendApis = {
-                contract: currentContract,
-                history: props.history,
-                location: props.location
-              }
-              return (
-                <MicroF
-                name={currentContract.name}
-                />
-              );
-            }}
-          />
-        );
-      }
-    }
+    // for (let contract in data) {
+    //   if (data.hasOwnProperty(contract)) {
+    //     let currentContract = data[contract];
+    //     let MicroF = props => React.createElement("micro-container", props);
+    //     routes.push(
+    //       <Route
+    //         key={currentContract.name}
+    //         path={`/${currentContract.route}`}
+    //         render={props => {
+    //           console.log("currentContract in route", currentContract);
+    //           return (
+    //             <MicroF
+    //               location={props.location}
+    //               history={props.history}
+    //               contract={currentContract}
+    //             />
+    //           );
+    //         }}
+    //       />
+    //     );
+    //   }
+    // }
   } catch (e) {
     return e;
   }
@@ -72,24 +82,20 @@ class App extends React.Component {
     let finalRoutes = this.state.routes;
     return (
       <BrowserRouter>
-        <Col className={"App"}>
-          {"Hello"}
-          <Switch>
-            {finalRoutes.length ? finalRoutes : null}
-            <Route
-              path={"/configure_contract"}
-              component={() => {
-                return null;
-              }}
-            />
-            <Route
-              path="/"
-              render={props => <Homepage contracts={this.state.contracts} />}
-              exact
-            />
-          
+        <Switch>
+          {finalRoutes.length ? finalRoutes : null}
+          <Route
+            path={"/configure_contract"}
+            component={() => {
+              return null;
+            }}
+          />
+          <Route
+            path="/"
+            render={props => <Homepage contracts={this.state.contracts} />}
+            exact
+          />
         </Switch>
-        </Col>
       </BrowserRouter>
     );
   }

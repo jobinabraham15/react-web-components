@@ -1,13 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Some from "./Some";
-export default class PopUpInfo extends HTMLElement {
+import Microfrontend from "./Microfrontend";
+export default class MicroContainer1 extends HTMLElement {
   static get observedAttributes() {
     return ["name"];
   }
   constructor() {
     // Always call super first in constructor
     super();
+
+    this._contract = {};
 
     // Create a shadow root
     var shadow = this.attachShadow({ mode: "open" });
@@ -70,7 +72,21 @@ export default class PopUpInfo extends HTMLElement {
     // shadow.appendChild(wrapper);
     // wrapper.appendChild(icon);
     // wrapper.appendChild(info);
-    ReactDOM.render(<Some />, shadow);
+    let currentContract = (window.microFrontendApis && window.microFrontendApis.contract) || {};
+      ReactDOM.render(<Microfrontend
+        history={(window.microFrontendApis && window.microFrontendApis.history) || null}
+        name={(currentContract && currentContract.name) || null}
+        host={(currentContract && currentContract.host) || ""}
+      />, shadow);
+ 
+  }
+
+  set contract(val) {
+    this._contract = val;
+  }
+
+  get contract() {
+    return this._contract;
   }
 
   updateTextContent(elem) {
@@ -93,12 +109,11 @@ export default class PopUpInfo extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log(
-      "Custom square element attr changed.",
-      name,
-      oldValue,
-      JSON.parse(JSON.stringify(newValue))
-    );
-    ReactDOM.render(<Some name={newValue} />, this.shadowRoot);
+    let currentContract = (window.microFrontendApis && window.microFrontendApis.contract) || {};
+    ReactDOM.render(<Microfrontend
+      history={(window.microFrontendApis && window.microFrontendApis.history) || null}
+      name={(currentContract && currentContract.name) || null}
+      host={(currentContract && currentContract.host) || ""}
+    />, this.shadowRoot);
   }
 }
