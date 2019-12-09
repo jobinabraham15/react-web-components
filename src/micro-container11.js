@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Microfrontend from "./Microfrontend";
+import ContainerLayout from "./container-layout";
 export default class MicroContainer1 extends HTMLElement {
   static get observedAttributes() {
     return ["name"];

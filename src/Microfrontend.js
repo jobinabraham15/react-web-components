@@ -5,7 +5,6 @@
 
 import React from "react";
 
-
 class Microfrontend extends React.Component {
   static defaultProps = {
     document: document,
@@ -18,8 +17,7 @@ class Microfrontend extends React.Component {
   componentDidMount() {
     const { name, host, document } = this.props;
     let root = document.querySelector("micro-container");
-    if(root)
-      this.shadow = root.shadowRoot;
+    if (root) this.shadow = root.shadowRoot;
     // const scriptId = `micro-${name}-`;
 
     // if (document.getElementById(scriptId)) {
@@ -92,7 +90,7 @@ class Microfrontend extends React.Component {
 
   renderMicroFrontend = () => {
     const { name, window, history } = this.props;
-    window[`render${name}`](this.shadow,`${name}-container`, history);
+    window[`render${name}`](this.shadow, `${name}-container`, history);
   };
 
   componentWillUnmount() {

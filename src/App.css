@@ -22,3 +22,9 @@
 .App-link {
   color: #09d3ac;
 }
+
+.homepage {
+  background: white;
+  color: black;
+  height: 100vh;
+}

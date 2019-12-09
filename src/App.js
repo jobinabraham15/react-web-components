@@ -4,7 +4,8 @@ import MicroContainer1 from "./micro-container11";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
 import { Homepage } from "./Homepage";
-import { Col } from "antd";
+import { Col, Row } from "antd";
+import ContainerLayout from "./container-layout";
 if (!customElements.get("micro-container")) {
   customElements.define("micro-container", MicroContainer1);
 }
@@ -44,11 +45,11 @@ let getRoutes = async () => {
                 contract: currentContract,
                 history: props.history,
                 location: props.location
-              }
+              };
               return (
-                <MicroF
-                name={currentContract.name}
-                />
+                <ContainerLayout contract={currentContract}>
+                  <MicroF name={currentContract.name} />{" "}
+                </ContainerLayout>
               );
             }}
           />
@@ -72,24 +73,24 @@ class App extends React.Component {
     let finalRoutes = this.state.routes;
     return (
       <BrowserRouter>
-        <Col className={"App"}>
-          {"Hello"}
-          <Switch>
-            {finalRoutes.length ? finalRoutes : null}
-            <Route
-              path={"/configure_contract"}
-              component={() => {
-                return null;
-              }}
-            />
-            <Route
-              path="/"
-              render={props => <Homepage contracts={this.state.contracts} />}
-              exact
-            />
-          
-        </Switch>
-        </Col>
+        <Row>
+          <Col span={24} className={"App"}>
+            <Switch>
+              {finalRoutes.length ? finalRoutes : null}
+              <Route
+                path={"/configure_contract"}
+                component={() => {
+                  return null;
+                }}
+              />
+              <Route
+                path="/"
+                render={props => <Homepage contracts={this.state.contracts} />}
+                exact
+              />
+            </Switch>
+          </Col>
+        </Row>
       </BrowserRouter>
     );
   }

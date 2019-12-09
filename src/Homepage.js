@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card } from "antd";
+import { Card, Row, Col } from "antd";
 import { Link } from "react-router-dom";
 /**
  * Uses contracts to build the list of all the microfrontends available
@@ -14,9 +14,11 @@ export const Homepage = ({ contracts }) => {
     for (let contract in contracts) {
       if (contracts.hasOwnProperty(contract)) {
         let currentContract = contracts[contract];
-        console.log("currentContract", currentContract);
         cards.push(
-          <Link to={`/${currentContract.route}${currentContract.landing}`} key={currentContract.name}>
+          <Link
+            to={`/${currentContract.route}${currentContract.landing}`}
+            key={currentContract.name}
+          >
             <Card.Grid
               hoverable
               style={{ width: "35%", textAlign: "center", marginRight: "10px" }}
@@ -32,9 +34,18 @@ export const Homepage = ({ contracts }) => {
   console.log("cards", cards);
   return (
     <>
-      <div style={{ width: 500, margin: "0 auto", paddingTop: "150px" }}>
-        {cards}
-      </div>
+      <Row className={"homepage"}>
+        <Col span={6} offset={9} style={{marginTop:"100px"}}>
+            {"Welcome to CTS Ultron"}
+        </Col>
+        <Col span={24}>
+          <Row>
+          <Col span={6} offset={9}>
+            {cards}
+          </Col>
+          </Row>
+        </Col>
+      </Row>
     </>
   );
 };
