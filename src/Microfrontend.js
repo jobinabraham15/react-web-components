@@ -25,10 +25,24 @@ class Microfrontend extends React.Component {
     //   return;
     // }
 
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          console.log("load triggered");
+          navigator.serviceWorker.register(`${host}/service-worker.js`, {scope:`${window.location.origin}/stafffing/`}).then(function(registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+
     fetch(`${host}/asset-manifest.json`)
       .then(res => res.json())
       .then(manifest => {
         let entryScripts = manifest.entrypoints;
+        
         console.log("Got Manifest", entryScripts, this.props.host);
         let entryScriptLength = entryScripts.length;
         let loaded = 0;

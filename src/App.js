@@ -29,13 +29,14 @@ let getRoutes = async () => {
   try {
     result = await axios.get("http://127.0.0.1:3003/contracts.json");
     let data = result.data;
-
+    let contractEx = [];
     for (let contract in data) {
       if (data.hasOwnProperty(contract)) {
         let currentContract = data[contract];
         let MicroF = props => {
           return React.createElement("micro-container", props);
         };
+        contractEx.push(currentContract)
         routes.push(
           <Route
             key={currentContract.name}
@@ -46,8 +47,9 @@ let getRoutes = async () => {
                 history: props.history,
                 location: props.location
               };
+              
               return (
-                <ContainerLayout contract={currentContract}>
+                <ContainerLayout contract={currentContract} allContracts = {contractEx}>
                   <MicroF name={currentContract.name} />{" "}
                 </ContainerLayout>
               );
