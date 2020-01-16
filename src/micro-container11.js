@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Microfrontend from "./Microfrontend";
 import ContainerLayout from "./container-layout";
+import retargetEvents from 'react-shadow-dom-retarget-events';
 export default class MicroContainer1 extends HTMLElement {
   static get observedAttributes() {
     return ["name"];
@@ -79,7 +80,7 @@ export default class MicroContainer1 extends HTMLElement {
         name={(currentContract && currentContract.name) || null}
         host={(currentContract && currentContract.host) || ""}
       />, shadow);
- 
+      retargetEvents(this.shadowRoot);
   }
 
   set contract(val) {
@@ -110,11 +111,13 @@ export default class MicroContainer1 extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    console.log("attributeChangedCallback");
     let currentContract = (window.microFrontendApis && window.microFrontendApis.contract) || {};
     ReactDOM.render(<Microfrontend
       history={(window.microFrontendApis && window.microFrontendApis.history) || null}
       name={(currentContract && currentContract.name) || null}
       host={(currentContract && currentContract.host) || ""}
     />, this.shadowRoot);
+    retargetEvents(this.shadowRoot);
   }
 }
